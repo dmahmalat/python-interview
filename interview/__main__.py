@@ -1,4 +1,4 @@
 # Entrypoint file when the package is run with the -m flag from the command line
-from . import greeting
+from . import interview_refactor
 
-greeting.hello_world()
+interview_refactor.main()

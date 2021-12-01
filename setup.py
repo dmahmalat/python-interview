@@ -1,9 +1,9 @@
 from setuptools import setup
 
-setup(name='hello_world',
+setup(name='interview',
       version='0.0.1',
-      description='Hello world package',
+      description='Interview Package',
       author='Dany Mahmalat',
-      packages=['hello_world'],
+      packages=['interview'],
       include_package_data = True,
 )
