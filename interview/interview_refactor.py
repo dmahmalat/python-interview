@@ -26,13 +26,9 @@ class Vehicle(ABC):
         return current_speed / self.weight / self.wheels
 
     def generate_license_plate(self):
-        if self.wheels == 4:
-            return (
-                f"FOUR{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
-            )
-        else:
-            return (
-                f"TWO{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
+        prefix = "FOUR" if self.wheels == 4 else "TWO"
+        return (
+                f"{prefix}{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
             )
 
     def collision_damage(self, v: "Vehicle"):
@@ -42,7 +38,7 @@ class Vehicle(ABC):
         b = 0.3 if v.wheels == 4 else 1
 
         # If vehicles with different wheel types collide,
-        # the damage factor of the 4 wheelers change from 0.3 to 0.5
+        # the damage factor of the 4 wheelers changes from 0.3 to 0.5
         if a != b:
             a = 0.5 if a == 0.3 else a
             b = 0.5 if b == 0.3 else b
