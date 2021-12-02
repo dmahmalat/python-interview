@@ -14,7 +14,7 @@ This will build an image containing Python 3.8 and an install of the `interview`
 The container will automatically run the module at startup and will display the results of the tests.\
 \
 Docker can be installed on a Windows machine via Docker Desktop:\
-https://www.docker.com/get-started\
+https://www.docker.com/get-started
 \
 To build the container, from the root folder, run:\
 `docker build --tag python_interview .`\
