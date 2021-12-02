@@ -11,5 +11,5 @@ COPY . /source_files
 RUN pip3 install /source_files/
 RUN rm -rf /source_files/
 
-# Run the hello world module
+# Run the interview module
 CMD [ "python3", "-m" , "interview"]
