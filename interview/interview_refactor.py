@@ -1,128 +1,81 @@
+# Imports =============================================================================
+from abc import ABC, abstractmethod # Abstract classes
 from typing import *
 import random
 
-
-class Sedan:
-    wheels = 4
-
+# Define an abstract class ============================================================
+class Vehicle(ABC):
     def __init__(self, model: str, weight: float, power: int, value: float):
         self.model = model
         self.weight = weight
         self.power = power
         self.value = value
+        super().__init__()
+    
+    # Shared properties
+    @property
+    @abstractmethod
+    def wheels(self):
+        pass
 
+    # Shared methods
     def max_speed(self):
         return self.weight * self.power
 
     def time_to_stop(self, current_speed: float):
         return current_speed / self.weight / self.wheels
 
+    def generate_license_plate(self):
+        if self.wheels == 4:
+            return (
+                f"FOUR{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
+            )
+        else:
+            return (
+                f"TWO{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
+            )
 
-class SportsCar:
+    def collision_damage(self, v: "Vehicle"):
+        # Initialize damage factor according to
+        # whether we are on 4 or 2 wheels
+        a = 0.3 if self.wheels == 4 else 1
+        b = 0.3 if v.wheels == 4 else 1
+
+        # If vehicles with different wheel types collide,
+        # the damage factor of the 4 wheelers change from 0.3 to 0.5
+        if a != b:
+            a = 0.5 if a == 0.3 else a
+            b = 0.5 if b == 0.3 else b
+
+        return a * self.value + b * v.value
+
+# Class definitions ===================================================================
+class Sedan(Vehicle):
     wheels = 4
 
-    def __init__(self, model: str, weight: float, power: int, value: float):
-        self.model = model
-        self.weight = weight
-        self.power = power
-        self.value = value
-
-        self.wheels = 4
-
-    def max_speed(self):
-        return self.weight * self.power
-
-    def time_to_stop(self, current_speed: float):
-        return current_speed / self.weight / self.wheels
-
-
-class ElectricCar:
+class SportsCar(Vehicle):
     wheels = 4
 
-    def __init__(self, model: str, weight: float, power: int, value: float):
-        self.model = model
-        self.weight = weight
-        self.power = power
-        self.value = value
+class ElectricCar(Vehicle):
+    wheels = 4
 
-        self.wheels = 4
-
-    def max_speed(self):
-        return self.weight * self.power
-
-    def time_to_stop(self, current_speed: float):
-        return current_speed / self.weight / self.wheels
-
-
-class MotorBike:
+class MotorBike(Vehicle):
     wheels = 2
 
-    def __init__(self, model: str, weight: float, power: int, value: float):
-        self.model = model
-        self.weight = weight
-        self.power = power
-        self.value = value
-
     def max_speed(self) -> float:
-        return (self.weight * self.power) ** 2
-
-    def time_to_stop(self, current_speed: float) -> float:
-        return current_speed / self.weight / self.wheels
+        return super().max_speed() ** 2
 
     def do_wheelie(self) -> None:
         return print("Doing a wheelieee!")
 
+# Method definitions ==================================================================
+def collision_damage(x: Vehicle, y: Vehicle) -> float:
+    return x.collision_damage(y)
 
-def collision_damage(
-    x: Union[Sedan, SportsCar, ElectricCar, MotorBike],
-    y: Union[Sedan, SportsCar, ElectricCar, MotorBike],
-) -> float:
-    if isinstance(x, Sedan) and isinstance(y, MotorBike):
-        return x.value * 0.50 + y.value * 1.0
-    elif isinstance(x, ElectricCar) and isinstance(y, MotorBike):
-        return x.value * 0.50 + y.value * 1.0
-    elif isinstance(x, SportsCar) and isinstance(y, MotorBike):
-        return x.value * 0.50 + y.value * 1.0
-    elif isinstance(x, MotorBike) and isinstance(y, Sedan):
-        return x.value * 1.0 + y.value * 0.5
-    elif isinstance(x, MotorBike) and isinstance(y, ElectricCar):
-        return x.value * 1.0 + y.value * 0.5
-    elif isinstance(x, MotorBike) and isinstance(y, SportsCar):
-        return x.value * 1.0 + y.value * 0.5
+def generate_licence_plate(v: Vehicle) -> str:
+    return v.generate_license_plate()
 
-    elif isinstance(x, Sedan) and isinstance(y, Sedan):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, Sedan) and isinstance(y, ElectricCar):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, Sedan) and isinstance(y, SportsCar):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, SportsCar) and isinstance(y, SportsCar):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, SportsCar) and isinstance(y, ElectricCar):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, SportsCar) and isinstance(y, Sedan):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, ElectricCar) and isinstance(y, SportsCar):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, ElectricCar) and isinstance(y, Sedan):
-        return x.value * 0.3 + y.value * 0.3
-    elif isinstance(x, ElectricCar) and isinstance(y, ElectricCar):
-        return x.value * 0.3 + y.value * 0.3
-
-    elif isinstance(x, MotorBike) and isinstance(y, MotorBike):
-        return x.value * 1.0 + y.value * 1.0
-
-
-def generate_licence_plate(x: Union[Sedan, SportsCar, ElectricCar, MotorBike]) -> str:
-    if x.wheels == 4:
-        return (
-            f"FOUR{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
-        )
-    else:
-        return (
-            f"TWO{random.randint(1, 10)}{random.randint(1, 10)}{random.randint(1, 10)}"
-        )
-
+# Code left intact for validation =====================================================
 def main():
     one = Sedan(model="toyota", weight=5000.0, power=150, value=10500.0)
     two = SportsCar(model="Nissan", weight=4000.0, power=250, value=30000.0)
