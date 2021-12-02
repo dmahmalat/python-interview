@@ -9,11 +9,7 @@ FROM python:3.8-slim-buster
 # and then call python3 to run packages
 COPY . /source_files
 RUN pip3 install /source_files/
-#RUN rm -rf /source_files/
-
-# DEBUG
-RUN apt-get update
-RUN apt-get install -y vim
+RUN rm -rf /source_files/
 
 # Run the hello world module
 CMD [ "python3", "-m" , "interview"]
